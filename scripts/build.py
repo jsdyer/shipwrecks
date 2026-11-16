@@ -201,6 +201,13 @@ def build(out, inputs):
     staging = payload.with_suffix(".tmp")
     staging.write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     staging.replace(payload)
+    nearby = {
+        "meta": snapshot["meta"],
+        "rows": [{field: row[field] for field in ("id", "name", "date", "place", "point", "mapId")}
+                 for row in rows if row["point"] is not None],
+    }
+    staging.write_text(json.dumps(nearby, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    staging.replace(out / "data" / "nearby.json")
     print(f"Built {len(rows):,} records; {mapped:,} plotted. Data file: {payload.stat().st_size:,} bytes.")
 
 

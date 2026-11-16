@@ -127,3 +127,6 @@ dialog::backdrop { background: #14241cbd; }
   .panel-head { margin: .75rem; }
   .panel-head h2 { font-size: 1.35rem; }
 }
+
+.nearby-entry { display: inline-block; margin-top: .65rem; color: var(--lime); font-size: .82rem; }
+.top nav { flex-wrap: wrap; }

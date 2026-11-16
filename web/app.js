@@ -255,6 +255,12 @@ function openRecord(row, writeHash = true) {
       $("map").focus({ preventScroll: true });
     }));
   }
+  if (row.point) {
+    const [lon, lat] = row.point;
+    const search = new URLSearchParams({ nearLat: lat, nearLon: lon, nearKm: 25 });
+    const nearby = link("Find nearby wrecks and historic places ↗", `../forgottenplaces/?${search}#nearby`);
+    list.append(nearby);
+  }
   if (row.mapId != null) {
     const mapHash = `#data_s=id%3AdataSource_3-19db53b0d64-layer-3%3A${row.mapId}`;
     list.append(link("Open official map record ↗", meta.map + mapHash));
