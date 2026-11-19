@@ -1,6 +1,8 @@
 const HOME = [-62.6, 44.8];
 const LON_SCALE = .71;
 const LABELS = [
+  ["TOBERMORY", -81.661, 45.249], ["GEORGIAN BAY", -81.53, 45.307],
+  ["LAKE HURON", -81.78, 45.25], ["COVE ISLAND", -81.729, 45.324],
   ["NOVA SCOTIA", -63.3, 45.14], ["NEW BRUNSWICK", -66.45, 46.25],
   ["PRINCE EDWARD ISLAND", -63.12, 46.49], ["CAPE BRETON", -60.88, 46.08],
   ["HALIFAX", -63.50, 44.70], ["SABLE ISLAND", -59.90, 43.79],
@@ -90,15 +92,20 @@ export class WreckMap {
     this.scale = Math.min(this.width / (11 * LON_SCALE), this.height / 5.7) * this.zoom;
   }
 
-  landShape(polygons) {
+  landShape(polygons, lakeLand) {
     if (!this.ctx || !Array.isArray(polygons)) return;
-    this.land = new Path2D();
-    for (const polygon of polygons) {
+    function outline(shapes) {
+      const path = new Path2D();
+      for (const polygon of shapes) {
       for (const ring of polygon) {
-        ring.forEach(([lon, lat], i) => { if (i === 0) this.land.moveTo(lon, lat); else this.land.lineTo(lon, lat); });
-        this.land.closePath();
+        ring.forEach(([lon, lat], i) => { if (i === 0) path.moveTo(lon, lat); else path.lineTo(lon, lat); });
+        path.closePath();
       }
     }
+      return path;
+    }
+    this.land=outline(polygons);
+    this.huron=outline(lakeLand);
     this.drawSoon();
   }
 
@@ -109,7 +116,7 @@ export class WreckMap {
 
   pan(dx, dy, notify = true) {
     if (!this.ctx) return;
-    this.centre[0] = Math.max(-80, Math.min(-45, this.centre[0] - dx / (this.scale * LON_SCALE)));
+    this.centre[0] = Math.max(-84, Math.min(-45, this.centre[0] - dx / (this.scale * LON_SCALE)));
     this.centre[1] = Math.max(38, Math.min(56, this.centre[1] + dy / this.scale));
     this.drawSoon();
     if (notify) this.onMove();
@@ -117,16 +124,16 @@ export class WreckMap {
 
   magnify(factor) {
     if (!this.ctx) return;
-    this.zoom = Math.max(.45, Math.min(22, this.zoom * factor));
+    this.zoom = Math.max(.45, Math.min(180, this.zoom * factor));
     this.updateScale();
     this.drawSoon();
     this.onMove();
   }
 
-  reset() {
+  reset(region = "") {
     if (!this.ctx) return;
-    this.centre = [...HOME];
-    this.zoom = 1;
+    this.centre = region === "ON" ? [-81.661,45.275] : [...HOME];
+    this.zoom = region === "ON" ? 45 : 1;
     this.updateScale();
     this.drawSoon();
     this.onMove();
@@ -135,7 +142,7 @@ export class WreckMap {
   focus(point) {
     if (!this.ctx || !point) return;
     this.centre = [...point];
-    this.zoom = 3;
+    this.zoom = point[0] < -80 ? 85 : 3;
     this.updateScale();
     this.drawSoon();
     this.onMove();
@@ -179,11 +186,17 @@ export class WreckMap {
       ctx.strokeStyle = "#79927a";
       ctx.lineWidth = 1 / scale;
       ctx.stroke(this.land);
+      // The Atlantic land geometry includes inland water. Paint the Great Lakes inset independently.
+      ctx.fillStyle = "#17342f";
+      ctx.fillRect(-84,43,5,4);
+      ctx.fillStyle = "#3b5748";
+      ctx.fill(this.huron, "evenodd");
+      ctx.stroke(this.huron);
     }
     ctx.beginPath();
-    const step = this.zoom < .85 ? 2 : this.zoom > 4 ? .25 : 1;
-    for (let i = -82; i <= -42; i += step) { ctx.moveTo(i, 36); ctx.lineTo(i, 58); }
-    for (let i = 36; i <= 58; i += step) { ctx.moveTo(-83, i); ctx.lineTo(-42, i); }
+    const step = this.zoom < .85 ? 2 : this.zoom > 20 ? .05 : this.zoom > 4 ? .25 : 1;
+    for (let i = -84; i <= -42; i += step) { ctx.moveTo(i, 36); ctx.lineTo(i, 58); }
+    for (let i = 36; i <= 58; i += step) { ctx.moveTo(-84, i); ctx.lineTo(-42, i); }
     ctx.strokeStyle = "#b7c6a339";
     ctx.lineWidth = .7 / scale;
     ctx.stroke();

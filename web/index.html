@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore Nova Scotia’s Marine Heritage Shipwrecks Database by coast, vessel, and year.">
+  <meta name="description" content="Explore Nova Scotia and Ontario shipwreck records by coast, vessel, and year.">
   <meta name="theme-color" content="#17201c">
   <title>Shipwreck Explorer · CoolCode</title>
   <link rel="stylesheet" href="./style.css">
@@ -21,9 +21,9 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <p class="kicker">ATLANTIC CANADA / MARINE HERITAGE</p>
+        <p class="kicker">ATLANTIC CANADA / GREAT LAKES</p>
         <h1>Shipwreck Explorer</h1>
-        <p class="intro">Follow centuries of strandings, sinkings, and maritime accidents around Nova Scotia through the province’s vessel records and wreck map.</p>
+        <p class="intro">Explore Nova Scotia’s marine heritage archive and Parks Canada’s shipwreck sites around Tobermory, Ontario. Search both collections or choose one to map its wrecks.</p>
       </div>
       <aside class="hero-card" aria-labelledby="jump-title">
         <h2 id="jump-title">Start with a place or vessel</h2>
@@ -31,7 +31,7 @@
           <button type="button" data-search="Sable Island">Sable Island</button>
           <button type="button" data-search="Halifax Harbour">Halifax Harbour</button>
           <button type="button" data-search='"SS Atlantic"'>SS Atlantic</button>
-          <button type="button" data-search="HMS">HMS vessels</button>
+          <button type="button" data-search="" data-region="ON">Tobermory wrecks</button>
         </div>
         <p id="coverage">Loading archive coverage…</p>
         <a class="nearby-entry" href="../forgottenplaces/#nearby">Find nearby wrecks and historic places ↗</a>
@@ -44,6 +44,7 @@
       <label class="query">Search the archive
         <input id="query" name="query" type="search" placeholder="Vessel, coastal place, event, or year" autocomplete="off" maxlength="180">
       </label>
+      <label>Collection<select id="region"><option value="">Both collections</option><option value="NS">Nova Scotia archive</option><option value="ON">Ontario · Tobermory</option></select></label>
       <label>Event<select id="event" name="event"><option value="">All events</option></select></label>
       <label>Era<select id="era" name="era"><option value="">All years</option><option value="before">Before 1800</option><option value="1800s">1800–1849</option><option value="1850s">1850–1899</option><option value="1900s">1900–1949</option><option value="1950s">1950 and later</option><option value="undated">Undated</option></select></label>
       <label>Sort<select id="sort"><option value="relevance">Relevance</option><option value="new">Newest first</option><option value="old">Oldest first</option><option value="name">Vessel A–Z</option></select></label>
@@ -106,7 +107,7 @@
 
 <footer id="sources" class="source-footer">
   <div class="wrap footer-grid">
-    <div><a class="brand" href="https://coolcode.ca/">CoolCode<span>.ca</span></a><p>Vessel records from the Maritime Museum of the Atlantic and Nova Scotia Open Data. Contains information licensed under the <a href="https://support.novascotia.ca/services/open-data-portal-licence">Open Government Licence – Nova Scotia</a>. Coastline from <a href="https://www.naturalearthdata.com/about/terms-of-use/">Natural Earth</a>.</p></div>
+    <div><a class="brand" href="https://coolcode.ca/">CoolCode<span>.ca</span></a><p>Vessel records from the Maritime Museum of the Atlantic and Nova Scotia Open Data. Contains information licensed under the <a href="https://support.novascotia.ca/services/open-data-portal-licence">Open Government Licence – Nova Scotia</a>. Ontario vessel history and 2024 site positions from <a href="https://parks.canada.ca/amnc-nmca/on/fathomfive/activ/plong-dive">Parks Canada’s Fathom Five guide</a>. Coastline and lake outlines from <a href="https://www.naturalearthdata.com/about/terms-of-use/">Natural Earth</a>.</p></div>
     <div><p id="source-dates">Source update information loads with the archive.</p><a href="https://data.novascotia.ca/Arts-Culture-and-History/Marine-Heritage-Shipwrecks-Database/rq3a-h5hk">Official dataset</a><a href="https://experience.arcgis.com/experience/eac46ae693a3468994ae0697a0c03f40">Nova Scotia’s original map</a><a href="https://archives.novascotia.ca/shipwrecks/">Nova Scotia Archives exhibit</a></div>
   </div>
 </footer>

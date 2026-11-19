@@ -108,11 +108,12 @@ function update(resetPage = false) {
   if (resetPage) page = 1;
   clearPointPicker();
   const query = terms($("query").value);
+  const region = $("region").value;
   const event = $("event").value;
   const era = $("era").value;
   const inView = $("map-filter").checked;
   const candidates = rows.filter(row => (
-    (!event || row.event === event) &&
+    (!region || row.region === region) && (!event || row.event === event) &&
     inEra(row, era) &&
     (!inView || map.visible(row.point)) &&
     query.every(term => row.search.includes(term))
@@ -136,7 +137,7 @@ function update(resetPage = false) {
 
   if (inView) {
     // Keep the same points available for panning even when the result list is clipped.
-    const base = rows.filter(row => (!event || row.event === event) && inEra(row, era) &&
+    const base = rows.filter(row => (!region || row.region === region) && (!event || row.event === event) && inEra(row, era) &&
       (!period || (row.year >= period && row.year < period + 25)) && query.every(term => row.search.includes(term)));
     map.setRows(base);
   } else {
@@ -220,6 +221,7 @@ function renderRows() {
 
 function resetFilters() {
   $("filters").reset();
+  map.reset();
   $("map-filter").checked = false;
   period = null;
   update(true);
@@ -265,7 +267,11 @@ function openRecord(row, writeHash = true) {
     const mapHash = `#data_s=id%3AdataSource_3-19db53b0d64-layer-3%3A${row.mapId}`;
     list.append(link("Open official map record ↗", meta.map + mapHash));
   }
-  list.append(link("View official CSV row as JSON ↗", rawRecordURL(row)));
+  if (row.region === "ON") {
+    list.append(link("Parks Canada vessel history ↗", row.source), link("Published site coordinates · guide PDF ↗", meta.ontarioGuide));
+  } else {
+    list.append(link("View official CSV row as JSON ↗", rawRecordURL(row)));
+  }
   if (row.nameKey === "ss atlantic") list.append(link("Nova Scotia Archives exhibit ↗", exhibit));
   const share = element("p");
   share.setAttribute("role", "status");
@@ -279,7 +285,7 @@ function openRecord(row, writeHash = true) {
       share.textContent = url.href;
     }
   }));
-  const note = row.point ? "The position on the map is approximate." : "No position from the official layer is plotted for this record.";
+  const note = row.region === "ON" ? "Map position is the approximate site from the Parks Canada 2024 guide. It can mark a relocated vessel or a mooring." : row.point ? "The position on the map is approximate." : "No position from the official layer is plotted for this record.";
   $("record-body").replaceChildren(summary, ...(fields.children.length ? [fields] : []), element("p", note), list, share);
   currentRecord = row.id;
   if (writeHash) history.replaceState(null, "", `#wreck=${row.id}`);
@@ -300,8 +306,9 @@ $("record").addEventListener("close", () => {
 window.addEventListener("hashchange", () => { if (meta) openFromHash(); });
 $("filters").addEventListener("submit", event => event.preventDefault());
 $("query").addEventListener("input", () => update(true));
-for (const id of ["event", "era", "sort", "map-filter"]) $(id).addEventListener("change", () => {
-  if (id === "era") period = null;
+for (const id of ["event", "era", "sort", "map-filter", "region"]) $(id).addEventListener("change", () => {
+  if (id === "era" || id === "region") period = null;
+  if (id === "region") { $("event").value = ""; map.reset($("region").value); }
   update(true);
 });
 $("clear").addEventListener("click", resetFilters);
@@ -310,7 +317,7 @@ $("timeline-clear").addEventListener("click", () => {
   update(true);
   $("timeline").querySelector("button:enabled")?.focus({ preventScroll: true });
 });
-$("map-home").addEventListener("click", () => map.reset());
+$("map-home").addEventListener("click", () => map.reset($("region").value));
 $("zoom-in").addEventListener("click", () => map.magnify(1.5));
 $("zoom-out").addEventListener("click", () => map.magnify(1 / 1.5));
 $("prev").addEventListener("click", () => { page--; renderRows(); $("results-heading").focus(); });
@@ -318,6 +325,7 @@ $("next").addEventListener("click", () => { page++; renderRows(); $("results-hea
 for (const seed of document.querySelectorAll("[data-search]")) {
   seed.addEventListener("click", () => {
     resetFilters();
+    if (seed.dataset.region) { $("region").value=seed.dataset.region; map.reset(seed.dataset.region); }
     $("query").value = seed.dataset.search;
     $("query").scrollIntoView({ block: "center" });
     update(true);
@@ -347,7 +355,7 @@ async function start() {
     $("coverage").textContent = `${formatCount(rows.length)} records · ${earliest}–${latest}`;
     const age = (Date.now() - Date.parse(meta.checked)) / 86400000;
     $("source-dates").textContent = [
-      `Source data updated ${displayDate(meta.sourceUpdated, "on an unreported date")}.`,
+      `Nova Scotia data updated ${displayDate(meta.sourceUpdated, "on an unreported date")}.`,
       `Snapshot checked ${displayDate(meta.checked, "on an unreported date")}.`,
       ...(age > 4 ? ["The snapshot check is more than four days old. Use the official dataset for the latest publication."] : [])
     ].join(" ");
@@ -365,7 +373,7 @@ async function start() {
   }
 }
 
-getJson("./shoreline.json").then(polygons => map.landShape(polygons)).catch(() => {
+Promise.all([getJson("./shoreline.json"),getJson("./huron-land.json")]).then(([coast,huron]) => map.landShape(coast,huron)).catch(() => {
   $("map").insertAdjacentElement("afterend", element("p", "Coastline unavailable. Wreck positions can still appear on the grid.", "map-note"));
 });
 start();

@@ -166,6 +166,40 @@ def import_records(raw, by_key):
     return records
 
 
+PARK_GUIDE = "https://parks.canada.ca/amnc-nmca/on/fathomfive/activ/plong-dive"
+SITE_TABLE = "https://parkscanadahistory.com/publications/fathomfive/brochures/dive-snorkel-guide-e-2024.pdf"
+
+
+def degrees(value):
+    deg, mins, secs = map(int, value.split())
+    if not (0 <= mins < 60 and 0 <= secs < 60):
+        raise ValueError("Invalid coordinate in Parks Canada site table")
+    return round(deg + mins/60 + secs/3600, 5)
+
+
+def ontario_records():
+    rows = []
+    with (ROOT / "scripts/fathom-five.csv").open(encoding="utf-8", newline="") as file:
+        for site in csv.DictReader(file):
+            number = int(site["site"])
+            when = site["date"]
+            details = {"Collection": "Fathom Five and Tobermory, Ontario", "Parks Canada site": str(number)}
+            if site["type"]:
+                details["Vessel type"] = site["type"]
+            point = [-degrees(site["longitude_dms"]), degrees(site["latitude_dms"])]
+            if not (-82 < point[0] < -81 and 45 < point[1] < 46):
+                raise ValueError("Position outside the Tobermory guide area")
+            place = site["place"] + ", Lake Huron, Ontario"
+            rows.append({"id": f"on-fathom-{number}", "name": site["name"], "date": when,
+                         "year": int(when[:4]) if when else None, "event": site["event"], "place": place,
+                         "point": point, "details": details, "mapId": None, "region": "ON",
+                         "source": PARK_GUIDE + ("/activ2a" if number in (1, 2) else ""),
+                         "search": index_text([site["name"], when, site["event"], place, *details.values()])})
+    if len(rows) != len({r["id"] for r in rows}) or len(rows) < 18:
+        raise ValueError("Incomplete Fathom Five site edition")
+    return rows
+
+
 def timestamp(value):
     return datetime.fromtimestamp(value, timezone.utc).isoformat() if isinstance(value, (int, float)) and value > 0 else None
 
@@ -181,6 +215,11 @@ def build(out, inputs):
     mapped = sum(row["point"] is not None for row in rows)
     if mapped < len(rows) // 2:
         raise ValueError(f"Only {mapped} rows join to in-range map coordinates; source compatibility changed.")
+    for row in rows:
+        row["region"] = "NS"
+    ontario = ontario_records()
+    rows.extend(ontario)
+    mapped += len(ontario)
     snapshot = {
         "meta": {
             "source": PORTAL, "csv": CSV_URL, "map": MAP_VIEW, "mapItem": MAP_ITEM,
@@ -189,7 +228,7 @@ def build(out, inputs):
             "metadataUpdated": timestamp(metadata.get("viewLastModified")),
             "checked": datetime.now(timezone.utc).isoformat(),
             "csvSha256": hashlib.sha256(raw).hexdigest(),
-            "count": len(rows), "mapped": mapped,
+            "count": len(rows), "mapped": mapped, "ontarioGuide": SITE_TABLE, "ontarioCount": len(ontario),
         },
         "rows": rows,
     }

@@ -51,7 +51,7 @@ h1 { font-size: clamp(2.7rem, 6.9vw, 6rem); font-weight: 730; letter-spacing: -.
 .seeds button { color: #e7f4e3; background: #233a30; font-size: .79rem; border: 1px solid #6b8d77; border-radius: 99px; padding: .28rem .55rem; }
 .seeds button:hover { color: var(--dark); background: var(--lime); }
 .workspace { padding: 1.4rem 0 2.5rem; }
-.filters { display: grid; grid-template-columns: minmax(210px,2.3fr) repeat(3,minmax(130px,1fr)) auto; gap: .72rem; align-items: end; margin-bottom: 1.2rem; }
+.filters { display: grid; grid-template-columns: minmax(170px,1.8fr) repeat(4,minmax(110px,1fr)) auto; gap: .72rem; align-items: end; margin-bottom: 1.2rem; }
 .filters label { font-size: .75rem; font-weight: 750; }
 .filters input, .filters select { background: var(--panel); border: 1px solid var(--line); padding: .59rem .65rem; width: 100%; min-width: 0; border-radius: 5px; margin-top: .3rem; }
 .filters input::placeholder { color: #5d675e; }
