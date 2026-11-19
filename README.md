@@ -2,6 +2,10 @@
 
 Explore Nova Scotia’s Marine Heritage Shipwrecks Database and Ontario’s Tobermory-area wreck sites through vessel names, wreck dates, recorded events, coastal locations, an interactive map and a filterable timeline.
 
+<!-- coolcode:guide -->
+Choose Ontario · Tobermory to map 18 Parks Canada sites. Open Arabia to see its recorded loss and the original site guide, or return to the Nova Scotia archive to compare wrecks around Sable Island.
+<!-- /coolcode:guide -->
+
 - The search matches vessel names, places, events, dates and available vessel details. Use quotes for a phrase.
 - Choose a 25-year interval in the timeline or filter by era and event. Zoom or pan the map and select **Search this map view** to limit results to the visible positions.
 - Open a vessel record to see its available details, copy a direct explorer link, and follow the government’s own map or data row.
