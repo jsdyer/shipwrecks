@@ -167,7 +167,7 @@ def import_records(raw, by_key):
 
 
 PARK_GUIDE = "https://parks.canada.ca/amnc-nmca/on/fathomfive/activ/plong-dive"
-SITE_TABLE = "https://parkscanadahistory.com/publications/fathomfive/brochures/dive-snorkel-guide-e-2024.pdf"
+SITE_TABLE = "https://parks.canada.ca/-/media/pn-np/on/bruce/wet4/pdf/dive-guide-ffnmp.pdf"
 
 
 def degrees(value):
