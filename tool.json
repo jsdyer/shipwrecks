@@ -1,0 +1,47 @@
+{
+  "id": "shipwrecks",
+  "title": "Shipwreck Explorer",
+  "description": "Search Nova Scotia shipwreck reports and explore documented wreck sites near Tobermory, Ontario.",
+  "category": "places",
+  "tags": [
+    "halifax",
+    "marine",
+    "atlantic",
+    "shipwrecks"
+  ],
+  "icon": "anchor",
+  "url": "/shipwrecks/",
+  "source": "https://github.com/jsdyer/shipwrecks",
+  "hosting": "project",
+  "access": "browser",
+  "data_info": {
+    "mode": "snapshot",
+    "detail": "Nova Scotia’s marine heritage register and Parks Canada’s Fathom Five guides supply two regional collections.",
+    "probes": [
+      {
+        "url": "https://coolcode.ca/shipwrecks/data/nearby.json",
+        "path": [
+          "meta",
+          "checked"
+        ],
+        "label": "Snapshot generated",
+        "count_at": {
+          "path": [
+            "meta",
+            "count"
+          ],
+          "unit": "shipwreck records"
+        }
+      },
+      {
+        "url": "https://coolcode.ca/shipwrecks/data/nearby.json",
+        "path": [
+          "meta",
+          "sourceUpdated"
+        ],
+        "label": "Nova Scotia source updated"
+      }
+    ],
+    "cadence": "Daily"
+  }
+}
