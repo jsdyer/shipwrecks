@@ -97,11 +97,14 @@ export class WreckMap {
     function outline(shapes) {
       const path = new Path2D();
       for (const polygon of shapes) {
-      for (const ring of polygon) {
-        ring.forEach(([lon, lat], i) => { if (i === 0) path.moveTo(lon, lat); else path.lineTo(lon, lat); });
-        path.closePath();
+        for (const ring of polygon) {
+          ring.forEach(([lon, lat], i) => {
+            if (i === 0) path.moveTo(lon, lat);
+            else path.lineTo(lon, lat);
+          });
+          path.closePath();
+        }
       }
-    }
       return path;
     }
     this.land=outline(polygons);

@@ -184,6 +184,9 @@ def ontario_records():
             number = int(site["site"])
             when = site["date"]
             details = {"Collection": "Fathom Five and Tobermory, Ontario", "Parks Canada site": str(number)}
+            if number == 20:
+                details["Location note"] = ("The 2024 brochure’s site coordinate plots slightly inland on the Ontario "
+                                            "Hydro Network shoreline. The marker preserves the printed reference.")
             if site["type"]:
                 details["Vessel type"] = site["type"]
             point = [-degrees(site["longitude_dms"]), degrees(site["latitude_dms"])]
