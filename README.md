@@ -12,7 +12,7 @@ Choose Ontario · Tobermory to map 18 Parks Canada sites. Open Arabia to see its
 
 ## Data and coverage
 
-The application uses the [official dataset](https://data.novascotia.ca/Arts-Culture-and-History/Marine-Heritage-Shipwrecks-Database/rq3a-h5hk), its [CSV export](https://data.novascotia.ca/api/views/rq3a-h5hk/rows.csv?accessType=DOWNLOAD), and [Socrata metadata](https://data.novascotia.ca/api/views/rq3a-h5hk.json). The portal links to the [official map](https://experience.arcgis.com/experience/eac46ae693a3468994ae0697a0c03f40), which uses a separate [licensed map layer](https://www.arcgis.com/home/item.html?id=b98081aed2db421eb35cc962068feb3a). The builder joins unambiguous vessel name, event date and location matches across those sources after normalizing spelling punctuation, but does not guess at conflicts or missing coordinates. It retains every CSV row. The map uses approximate published locations within its Atlantic Canada extent. Additional vessel fields are shown only when available.
+The application uses the [official dataset](https://data.novascotia.ca/Arts-Culture-and-History/Marine-Heritage-Shipwrecks-Database/rq3a-h5hk), its [full public SODA3 CSV export](https://data.novascotia.ca/api/v3/views/rq3a-h5hk/export.csv), and [Socrata metadata](https://data.novascotia.ca/api/views/rq3a-h5hk.json). The export needs no API key and replaces the retired `rows.csv` download. The portal links to the [official map](https://experience.arcgis.com/experience/eac46ae693a3468994ae0697a0c03f40), which uses a separate [licensed map layer](https://www.arcgis.com/home/item.html?id=b98081aed2db421eb35cc962068feb3a). The builder joins unambiguous vessel name, event date and location matches across those sources after normalizing spelling punctuation, but does not guess at conflicts or missing coordinates. It retains every CSV row. The map uses approximate published locations within its Atlantic Canada extent. Additional vessel fields are shown only when available.
 
 The Nova Scotia snapshot contains 4,939 records dated 1583–2001, with 4,019 records plotted. It has 54 records dated August 24, 1873. It covers a portion of known shipwrecks. Dates and events are recorded as published, including records where the vessel was later refloated or repaired. See the [Nova Scotia Archives exhibit](https://archives.novascotia.ca/shipwrecks/) for historical context and images.
 
@@ -23,6 +23,7 @@ Contains information licensed under the [Open Government Licence – Nova Scotia
 The build uses Python 3’s standard library. GitHub Pages serves the generated files, and search, map and timeline interactions run in the browser.
 
 ```sh
+python3 -m unittest discover -s tests -v
 python3 scripts/build.py
 python3 -m http.server 8080 --directory dist
 ```

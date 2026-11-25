@@ -1,0 +1,5 @@
+Vessel Name,Date of Wreck,Event,Location of wreck,Story
+Example Vessel - 1875,1875-05-01,Stranded,"Example Island, Cape Breton","A quoted detail, preserved."
+Ambiguous Vessel - 1900,1900-04-10,Foundered,Example Cove,
+Unmapped Vessel,1890,Stranded,Unknown,
+Undated Vessel,,Foundered,Unknown,

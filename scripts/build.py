@@ -20,7 +20,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 PORTAL = "https://data.novascotia.ca/Arts-Culture-and-History/Marine-Heritage-Shipwrecks-Database/rq3a-h5hk"
-CSV_URL = "https://data.novascotia.ca/api/views/rq3a-h5hk/rows.csv?accessType=DOWNLOAD"
+CSV_URL = "https://data.novascotia.ca/api/v3/views/rq3a-h5hk/export.csv"
 META_URL = "https://data.novascotia.ca/api/views/rq3a-h5hk.json"
 ARCGIS = "https://services7.arcgis.com/guiEgv5T1fmjU8SW/arcgis/rest/services/CUL_NS_Shipwrecks_WM84_PROD/FeatureServer/0"
 MAP_ITEM = "https://www.arcgis.com/home/item.html?id=b98081aed2db421eb35cc962068feb3a"
